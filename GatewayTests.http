@@ -1,0 +1,7 @@
+### Destinations (1st call -> MISS)
+GET http://localhost:5080/hotel/api/v1/destinations
+
+### Destinations (2nd call -> HIT)
+GET http://localhost:5080/hotel/api/v1/destinations
+
+

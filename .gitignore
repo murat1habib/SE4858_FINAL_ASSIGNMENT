@@ -1,0 +1,91 @@
+########################################
+# OS / Editors
+########################################
+.DS_Store
+Thumbs.db
+
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+########################################
+# .NET / Build
+########################################
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+
+*.nupkg
+*.snupkg
+
+########################################
+# Logs
+########################################
+logs/
+*.log
+
+########################################
+# Secrets / Config (DO NOT COMMIT)
+########################################
+# appsettings - keep example templates only
+**/appsettings.json
+**/appsettings.*.json
+!**/appsettings.example.json
+!**/appsettings*.example.json
+!**/appsettings.json.example
+!**/appsettings.*.json.example
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Common secret files
+secrets.json
+credentials.json
+serviceAccountKey.json
+*serviceAccount*.json
+*adminsdk*.json
+
+# Local certs
+*.pfx
+*.pem
+*.crt
+*.key
+
+########################################
+# Node / React (Vite)
+########################################
+**/node_modules/
+**/dist/
+**/build/
+**/.parcel-cache/
+**/.next/
+**/.nuxt/
+**/.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vite/
+
+
+# If you want to keep a small sample dataset, you can add:
+# !**/ml/**/data/sample.csv
+
+########################################
+# Docker / Tooling
+########################################
+**/.docker/
+docker-compose.override.yml
+
+########################################
+# Publish artifacts
+########################################
+**/Properties/PublishProfiles/
+*.pubxml.user
