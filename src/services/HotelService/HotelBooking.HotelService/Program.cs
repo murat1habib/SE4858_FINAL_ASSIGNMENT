@@ -4,9 +4,14 @@ using HotelBooking.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 using HotelBooking.HotelService.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var cs = builder.Configuration.GetConnectionString("DefaultConnection")
+         ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
+
+if (string.IsNullOrWhiteSpace(cs))
+    throw new InvalidOperationException("DefaultConnection is not set. Use env var ConnectionStrings__DefaultConnection.");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,16 +26,15 @@ builder.Services.AddHttpClient<NotificationPublisher>(client =>
     client.BaseAddress = new Uri("http://localhost:5080/notify");
 });
 builder.Services.AddMemoryCache();
-builder.Services.AddDbContext<HotelBookingDbContext>(opt =>
-{
-    var cs = builder.Configuration.GetConnectionString("HotelBookingDb");
-    opt.UseSqlServer(cs);
-});
+builder.Services.AddDbContext<HotelBookingDbContext>(opt => opt.UseSqlServer(cs));
+
 builder.Services.AddHttpClient<NotificationPublisher>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5002");
 });
 builder.Services.AddSingleton<HotelBooking.HotelService.ML.PricingModelService>();
+builder.Services.AddDbContext<HotelBookingDbContext>(opt =>
+    opt.UseSqlServer(cs));
 
 
 
