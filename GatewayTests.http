@@ -1,7 +1,14 @@
-### Destinations (1st call -> MISS)
-GET http://localhost:5080/hotel/api/v1/destinations
+POST https://hotelbooking-gateway-unique-d4h8fffjgxa8fqet.francecentral-01.azurewebsites.net/hotel/api/v1/hotels/search
+Content-Type: application/json
 
-### Destinations (2nd call -> HIT)
-GET http://localhost:5080/hotel/api/v1/destinations
+{
+  "destination": "Bodrum",
+  "startDate": "2026-03-10",
+  "endDate": "2026-03-12",
+  "people": 2,
+  "roomCount": 1,
+  "page": 1,
+  "pageSize": 10
+}
 
 

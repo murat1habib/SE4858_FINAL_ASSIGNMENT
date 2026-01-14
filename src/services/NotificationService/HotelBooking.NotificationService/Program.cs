@@ -3,23 +3,34 @@ using HotelBooking.NotificationService.Messaging;
 using HotelBooking.NotificationService.Storage;
 using HotelBooking.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
+using Azure.Messaging.ServiceBus;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var sbConn = builder.Configuration["SERVICEBUS_CONNECTION"];
+if (string.IsNullOrWhiteSpace(sbConn))
+    throw new InvalidOperationException("SERVICEBUS_CONNECTION is not set");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<QueueConsumerWorker>();
 builder.Services.AddSingleton<InMemoryReservationQueue>();
 builder.Services.AddSingleton<InMemoryNotificationStore>();
+
 builder.Services.AddDbContext<HotelBookingDbContext>(opt =>
 {
-    var cs = builder.Configuration.GetConnectionString("HotelBookingDb");
+    var cs =
+        builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
+
     opt.UseSqlServer(cs);
 });
+
+builder.Services.AddSingleton(_ => new ServiceBusClient(sbConn));
+builder.Services.AddHostedService<QueueConsumerWorker>();
 
 var app = builder.Build();
 
@@ -31,9 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
+

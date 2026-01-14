@@ -1,11 +1,12 @@
-const BASE = import.meta.env.VITE_API_BASE_URL;
+const BASE =
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://hotelbooking-gateway-unique-d4h8fffjgxa8fqet.francecentral-01.azurewebsites.net";
 
 async function http(method, path, body) {
     const res = await fetch(`${BASE}${path}`, {
         method,
         headers: {
             "Content-Type": "application/json",
-            // Admin simulate (þimdilik)
             Authorization: "Bearer admin-demo",
         },
         body: body ? JSON.stringify(body) : undefined,

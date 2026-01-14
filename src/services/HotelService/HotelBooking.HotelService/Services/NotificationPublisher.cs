@@ -1,21 +1,27 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text.Json;
+using Azure.Messaging.ServiceBus;
 using HotelBooking.Contracts.Messages;
 
 namespace HotelBooking.HotelService.Services;
 
 public sealed class NotificationPublisher
 {
-    private readonly HttpClient _http;
+    private readonly ServiceBusSender _sender;
 
-    public NotificationPublisher(HttpClient http)
+    public NotificationPublisher(ServiceBusSender sender)
     {
-        _http = http;
+        _sender = sender;
     }
 
     public async Task PublishNewReservationAsync(NewReservationMessage msg, CancellationToken ct = default)
     {
-        // ✅ NotificationService: POST /api/v1/notifications
-        var res = await _http.PostAsJsonAsync("/api/v1/notifications", msg, ct);
-        res.EnsureSuccessStatusCode();
+        var json = JsonSerializer.Serialize(msg);
+        var sbMsg = new ServiceBusMessage(json)
+        {
+            ContentType = "application/json",
+            Subject = "reservation.created"
+        };
+
+        await _sender.SendMessageAsync(sbMsg, ct);
     }
 }
